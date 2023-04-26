@@ -1,5 +1,7 @@
 package edu.kh.comm.member.model.dao;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,54 @@ public class MemberDAO {
 		
 		return loginMember;
 		
+	}
+
+
+	/** 이메일 중복검사 DAO
+	 * @param memberEmail
+	 * @return
+	 */
+	public int emailDupCheck(String memberEmail) {
+		return sqlSession.selectOne("memberMapper.emailDupCheck", memberEmail);
+	}
+
+
+	/** 닉네임 중복검사 DAO
+	 * @param memberNickname
+	 * @return
+	 */
+	public int nicknameDupCheck(String memberNickname) {
+		return sqlSession.selectOne("memberMapper.nicknameDupCheck", memberNickname);
+	}
+
+
+	/** 회원가입 서비스 DAO
+	 * @param inputMember
+	 * @return
+	 */
+	public int signUp(Member inputMember) {
+		
+		return sqlSession.insert("memberMapper.signUp", inputMember);
+	}
+
+
+	/** 회원 1명 조회
+	 * @param memberEmail
+	 * @return
+	 */
+	public Member selectOne(String memberEmail) {
+		
+		Member member = sqlSession.selectOne("memberMapper.selectOne", memberEmail);
+		
+		return sqlSession.selectOne("memberMapper.selectOne", memberEmail);
+	}
+
+
+	/**  회원 목록 조회(ajax)
+	 * @return
+	 */
+	public List<Member> selectAll() {
+		return sqlSession.selectList("memberMapper.selectAll");
 	}
 
 }
