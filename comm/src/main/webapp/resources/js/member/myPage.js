@@ -1,3 +1,4 @@
+
 // 내 정보 수정 유효성 검사
 function infoValidate(){
 
@@ -235,4 +236,5 @@ document.getElementById("delete-image").addEventListener("click", function(){
     }
 
 });
+
 
