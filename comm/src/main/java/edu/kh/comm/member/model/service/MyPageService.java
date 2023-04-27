@@ -19,4 +19,10 @@ public interface MyPageService {
 	 */
 	int changePw(Member member, String currentPw, String newPw);
 
+	/** 회원 정보 수정
+	 * @param loginMember
+	 * @return
+	 */
+	int updateInfo(Member loginMember);
+
 }

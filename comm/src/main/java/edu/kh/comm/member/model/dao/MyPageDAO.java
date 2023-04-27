@@ -42,6 +42,11 @@ public class MyPageDAO {
 		return sqlSession.update("myPageMapper.changePw", member);
 	}
 
+
+	public int updateInfo(Member loginMember) {
+		return sqlSession.update("myPageMapper.updateInfo", loginMember);
+	}
+
 	
 	
 	

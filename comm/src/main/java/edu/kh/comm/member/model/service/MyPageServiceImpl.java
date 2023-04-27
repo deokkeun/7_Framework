@@ -70,6 +70,15 @@ public class MyPageServiceImpl implements MyPageService{
 	}
 
 
+	/** 회원정보 수정
+	 *
+	 */
+	@Override
+	public int updateInfo(Member loginMember) {
+		return dao.updateInfo(loginMember);
+	}
+
+
 	
 	
 	

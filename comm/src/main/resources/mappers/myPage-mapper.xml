@@ -44,6 +44,16 @@
 		AND SECESSION_FL = 'N'
 	 </update>
 	 
+	 <!-- 회원정보 수정 -->
+	 <update id="updateInfo" parameterType="member">
+		UPDATE MEMBER_S 
+		SET MEMBER_NICK = #{memberNickname},
+		MEMBER_TEL = #{memberTel},
+		MEMBER_ADDR = #{memberAddress}
+		WHERE MEMBER_NO = #{memberNo}
+		AND SECESSION_FL = 'N'
+	 </update>
+	 
 	 
 	 
 </mapper>
