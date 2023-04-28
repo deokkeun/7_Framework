@@ -265,31 +265,40 @@ public class MemberController {
 	@PostMapping("/signUp")
 	public String signUp(Member inputMember, 
 							RedirectAttributes ra,
-							HttpServletRequest req) {
+							String[] memberAddress) {
 		
+		// 커맨드 객체를 이용해서 입력된 회원 정보를 잘 받아옴
+		// 단, 같은 name을 가진 주소가 하나의 문자열로 합쳐서 세팅되어 들어옴.
+		// -> 도로명 주소에 "," 기호가 포함되는 경우가 있어 이를 구분자로 사용할 수 없다.
 		
-		String[] address = req.getParameterValues("memberAddress");
+		inputMember.setMemberAddress(String.join(",,", memberAddress));
+		// String.join("구분자", 배열);
+		// 배열을 하나의 문자열로 합치는 메서드
+		// 값 중간중간에 구분자가 들어가서 하나의 문자열로 합쳐줌
+		// [a,b,c] -> join 진행 -> "a,,b,,c"
 		
-		if(!address[0].equals("")) {
-			inputMember.setMemberAddress(String.join(",,", address));
-		} else {
-			inputMember.setMemberAddress(null);
+		if(inputMember.getMemberAddress().equals(",,,,")) { // 주소가 입력되지 않은 경우
+			inputMember.setMemberAddress(null); // null로 변환
 		}
 
-		logger.debug(inputMember.getMemberAddress());
-		String[] add = inputMember.getMemberAddress().split(",,");
-		logger.debug(add[0]);
-		logger.debug(add[1]);
-		logger.debug(add[2]);
-		
+		// 회원 가입 서비스 호출
 		int result = service.signUp(inputMember);
+
+		String message = null;
+		String path = null;
 		
-		if(result == 1) {
-			ra.addFlashAttribute("message", "회원가입 성공!");		
-		} else {
-			ra.addFlashAttribute("message", "회원가입 실패!");
+		if(result > 0) { // 회원 가입 성공
+			message = "회원 가입 성공!!";
+			path = "redirect:/"; // 메인페이지
+			
+		} else { // 실패
+			message = "회원 가입 실패ㅜㅜ";
+			path = "redirect:/member/signUp"; // 회원 가입 페이지
 		}
-		return "redirect:/";			
+		
+		ra.addFlashAttribute("message", message);
+		
+		return path;			
 	}
 	
 	// 회원 1명 정보 조회(ajax)

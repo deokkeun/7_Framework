@@ -76,7 +76,7 @@
                     </div>
                     
                     <div class="myPage-row info-address">
-                        <input type="text" name="updateAddress" value="${addr[2]}">
+                        <input type="text" name="updateAddress" id="detailAddress" value="${addr[2]}">
                     </div>
 
                     <button id="info-update-btn">수정하기</button>

@@ -1,5 +1,7 @@
 package edu.kh.comm.member.model.dao;
 
+import java.util.Map;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,9 +14,6 @@ public class MyPageDAO {
 	@Autowired
 	private SqlSessionTemplate sqlSession;
 
-	
-	
-	
 	
 	/** 회원탈퇴 비밀번호 일치 확인
 	 * @param member
@@ -33,20 +32,55 @@ public class MyPageDAO {
 		return sqlSession.update("myPageMapper.updateSecession", member);
 	}
 
-
+	
 	/** 비밀번호 변경
-	 * @param member
+	 * @param paramMap
 	 * @return
 	 */
-	public int changePw(Member member) {
-		return sqlSession.update("myPageMapper.changePw", member);
+	public int changePw(Map<String, Object> paramMap) {
+		return sqlSession.update("myPageMapper.changePw", paramMap);
 	}
 
 
-	public int updateInfo(Member loginMember) {
-		return sqlSession.update("myPageMapper.updateInfo", loginMember);
+
+	/** 회원 정보 수정 DAO
+	 * @param paramMap
+	 * @return result
+	 */
+	public int updateInfo(Map<String, Object> paramMap) {
+
+		return sqlSession.update("myPageMapper.updateInfo", paramMap);
 	}
 
+
+	/** 현재 로그인한 회원의 암호화된 비밀번호 조회 DAO
+	 * @param memberNo
+	 * @return
+	 */
+	public String selectEncPw(int memberNo) {
+		
+		return sqlSession.selectOne("myPageMapper.selectEncPw", memberNo);
+	}
+
+
+	/** 회원 탈퇴 DAO
+	 * @param memberNo
+	 * @return
+	 */
+	public int secession(int memberNo) {
+
+		return sqlSession.update("myPageMapper.secession", memberNo);
+	}
+
+
+	/** 프로필 이미지 수정
+	 * @param map
+	 * @return result
+	 */
+	public int updateProfile(Map<String, Object> map) {
+		
+		return sqlSession.update("myPageMapper.updateProfile", map);
+	}
 	
 	
 	
