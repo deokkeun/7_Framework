@@ -17,10 +17,10 @@
 	<typeAliases>
 		<typeAlias type="edu.kh.comm.member.model.vo.Member" alias="member"/>
 		
-		<typeAlias type="edu.kh.comm.board.model.vo.Board" alias="Board"/>
-		<typeAlias type="edu.kh.comm.board.model.vo.BoardDetail" alias="BoardDetail"/>
-		<typeAlias type="edu.kh.comm.board.model.vo.BoardImage" alias="BoardImage"/>
-		<typeAlias type="edu.kh.comm.board.model.vo.BoardType" alias="BoardType"/>
+		<typeAlias type="edu.kh.comm.board.model.vo.Board" alias="board"/>
+		<typeAlias type="edu.kh.comm.board.model.vo.BoardDetail" alias="detail"/>
+		<typeAlias type="edu.kh.comm.board.model.vo.BoardImage" alias="boardImage"/>
+		<typeAlias type="edu.kh.comm.board.model.vo.BoardType" alias="boardType"/>
 	</typeAliases>
 
 	<!-- SQL이 작성되는 mapper 파일 위치를 등록 -->
