@@ -113,6 +113,13 @@
         deleteBtn.addEventListener("click", function(){
             // 현재 : /board/detail/{boardCode}/{boardNo}
             // 목표 : /board/delete/{boardCode}/{boardNo}
+
+
+            console.log(boardNo);
+            console.log(boardCode);
+
+            const ref = console.log(document.referrer);
+
       
             let url = contextPath + "/board/delete/" + boardCode + "/" +  boardNo;
             // 삭제 성공 -> 해당 게시판 목록 조회 1페이지로 리다이렉트
@@ -125,6 +132,8 @@
 
             if( confirm("정말로 삭제 하시겠습니까?") ){
                 location.href = url; // get방식으로 url에 요청
+            } else {
+                location.href = document.referrer;
             }
 
         });

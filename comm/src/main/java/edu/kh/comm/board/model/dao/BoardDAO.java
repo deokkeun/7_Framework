@@ -94,6 +94,14 @@ public class BoardDAO {
 		
 		return sqlSession.selectList("boardMapper.searchBoardList", paramMap, rowBounds);
 	}
+
+	/** 게시글 삭제 서비스
+	 * @param boardNo
+	 * @return
+	 */
+	public int delete(int boardNo) {
+		return sqlSession.update("boardMapper.delete", boardNo);
+	}
 	
 
 	

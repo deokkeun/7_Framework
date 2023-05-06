@@ -16,11 +16,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.kh.comm.board.model.service.BoardService;
 import edu.kh.comm.board.model.vo.BoardDetail;
+import edu.kh.comm.board.model.vo.BoardImage;
 import edu.kh.comm.common.Util;
 import edu.kh.comm.member.model.vo.Member;
 
@@ -32,7 +36,7 @@ public class BoardController {
 	private BoardService service;
 	
 	
-	Logger logger = LoggerFactory.getLogger(BoardController.class);
+	private Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
 	// 게시글 목록 조회
 	
@@ -145,7 +149,6 @@ public class BoardController {
 					cookie = new Cookie("readBoardNo", boardNo+"");
 					result = service.updateReadCount(boardNo);// 조회 수 증가 서비스 호출
 					
-					
 				} else { // 기존에 "readBoardNo" 이름의 쿠키가 있던 경우
 					// "readBoardNo"  :   "1/2/3/5/30/500" + / + boardNo
 					// -> 쿠키에 저장된 값 뒤쪽에 현재 조회된 게시글 번호 추가
@@ -153,6 +156,7 @@ public class BoardController {
 					String[] temp = cookie.getValue().split("/");
 					
 					List<String> list = Arrays.asList(temp); // 배열 -> List 변환
+					
 					
 					if(list.indexOf(boardNo+"") == -1) { // 기존 값에 같은 글번호가 없다면 추가
 						cookie.setValue( cookie.getValue() + "/" + boardNo );
@@ -194,6 +198,7 @@ public class BoardController {
 								String mode,
 								@RequestParam(value="no", required=false, defaultValue="0") int boardNo,
 								Model model) {
+								// no = 글쓰기 버튼(0), 수정버튼 게시글 번호
 		
 		if(mode.equals("update")) {
 			// 게시글 상세 조회 서비스 호출(boardNo)
@@ -211,7 +216,51 @@ public class BoardController {
 	}
 	
 	
+	/** 게시글 삭제
+	 * @return
+	 */
+	@GetMapping("/delete/{boardCode}/{boardNo}")
+	public String delete(@PathVariable("boardCode") int boardCode,
+						@PathVariable("boardNo") int boardNo,
+						RedirectAttributes ra) {
+		
+		int result = service.delete(boardNo);
+		
+		if(result > 0) {
+			ra.addFlashAttribute("message", "게시글이 삭제되었습니다.");
+			return "redirect:/board/list/" + boardCode;
+		} else {
+			ra.addFlashAttribute("message", "게시글 삭제중 오류발생!");
+			//board/detail/3/499
+			return "redirect:/board/detail/" + boardCode + "/" + boardNo;
+		}
+		
+	}
 	
+	
+	/** 게시글 등록.............................
+	 * @return
+	 */
+	@PostMapping("${contextPath}/write")
+	public String write(@RequestParam Map<String, Object> paramMap,
+						@RequestParam("0") MultipartFile uploadImage,
+						HttpServletRequest req,
+						RedirectAttributes ra) {
+		
+		// 웹 접근 경로
+		String webPath = "/resources/images/board/";
+		// 서버 저장 폴더 경로
+		String folderPath = req.getSession().getServletContext().getRealPath(webPath);
+		
+		
+		logger.debug("썸네일 이미지 확인" + uploadImage);
+		logger.debug("게시글 등록 번호" + paramMap.get("no"));
+		
+		List<BoardImage> imageList;
+		//...............................................
+		
+		return "board/boardList";
+	}
 	
 	
 	

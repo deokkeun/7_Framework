@@ -74,7 +74,9 @@
                     <div class="img-box">
                         <div class="boardImg thumbnail">
                             <img src="${contextPath}${thumbnail.imageReName}">
-                            <a href="${contextPath}${thumbnail.imageReName}" download="${thumbnail.imageOriginal}">다운로드</a>         
+                            <a href="${contextPath}${thumbnail.imageReName}" download="${thumbnail.imageOriginal}">다운로드</a>
+                            <div>${thumbnail.imageReName}</div>         
+                            <div>${thumbnail.imageOriginal}</div>         
                         </div>
                     </div>
                 </c:if>
@@ -174,6 +176,9 @@
         
         // 게시글 번호
         const boardNo = "${detail.boardNo}"; // "500"
+        
+        // 게시글 코드
+       	const boardCode = "${boardCode}" // "3"
 
         // 로그인한 회원 번호
         const loginMemberNo = "${loginMember.memberNo}";

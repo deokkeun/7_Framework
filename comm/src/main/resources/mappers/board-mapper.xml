@@ -219,7 +219,11 @@
 	</select>
 	
 	
-	
+	<update id="delete">
+		UPDATE BOARD 
+		SET BOARD_ST = 'Y' 
+		WHERE BOARD_NO = ${boardNo}
+	</update>
 
 
 </mapper>
