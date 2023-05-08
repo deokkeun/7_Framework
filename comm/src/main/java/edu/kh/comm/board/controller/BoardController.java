@@ -1,5 +1,6 @@
 package edu.kh.comm.board.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -238,26 +239,63 @@ public class BoardController {
 	}
 	
 	
-	/** 게시글 등록.............................
+	/** 게시글 등록
 	 * @return
 	 */
-	@PostMapping("${contextPath}/write")
-	public String write(@RequestParam Map<String, Object> paramMap,
-						@RequestParam("0") MultipartFile uploadImage,
+	@PostMapping("/write")
+	public String write(@RequestParam("0") MultipartFile image0,
+						@RequestParam("1") MultipartFile image1,
+						@RequestParam("2") MultipartFile image2,
+						@RequestParam("3") MultipartFile image3,
+						@RequestParam("4") MultipartFile image4,
+						@RequestParam Map<String, Object> paramMap,
 						HttpServletRequest req,
-						RedirectAttributes ra) {
+						RedirectAttributes ra,
+						HttpSession session) {
+		
+		List<MultipartFile> imageList = new ArrayList<>();
+		MultipartFile[] imageFile = {image0, image1, image2, image3, image4};
+
+		for(MultipartFile image : imageFile) {
+			if(image.getSize() != 0) {
+				imageList.add(image);
+				logger.debug("이미지 확인" + image);
+			}
+		}
+		
+		logger.debug("이미지 리스트 확인" + imageList);
 		
 		// 웹 접근 경로
 		String webPath = "/resources/images/board/";
 		// 서버 저장 폴더 경로
 		String folderPath = req.getSession().getServletContext().getRealPath(webPath);
 		
+		paramMap.put("webPath", webPath);
+		paramMap.put("folderPath", folderPath);
+		paramMap.put("imageList", imageList);
 		
-		logger.debug("썸네일 이미지 확인" + uploadImage);
-		logger.debug("게시글 등록 번호" + paramMap.get("no"));
+		logger.debug("mode 확인 : " + paramMap.get("mode"));
 		
-		List<BoardImage> imageList;
-		//...............................................
+		if(paramMap.get("mode").equals("insert")) {
+			
+			Member loginMember = (Member)session.getAttribute("loginMember");
+			
+			logger.debug("type : " + paramMap.get("type"));
+			
+			paramMap.put("loginMember", loginMember);
+			int result = service.insertBoard(paramMap);
+			
+			if(result == 1) {
+				logger.debug("게시글 등록 성공" + result);
+			} else {
+				logger.debug("게시글 등록 실패" + result);				
+			}
+			
+		} else {
+			
+			
+		}
+		
 		
 		return "board/boardList";
 	}

@@ -95,6 +95,16 @@ public class BoardDAO {
 		return sqlSession.selectList("boardMapper.searchBoardList", paramMap, rowBounds);
 	}
 
+	
+	/** 게시글 등록 서비스
+	 * @param paramMap
+	 * @return
+	 */
+	public int insertBoard(Map<String, Object> paramMap) {
+		return sqlSession.update("boardMapper.insertBoard", paramMap);
+	}
+	
+	
 	/** 게시글 삭제 서비스
 	 * @param boardNo
 	 * @return
@@ -102,6 +112,7 @@ public class BoardDAO {
 	public int delete(int boardNo) {
 		return sqlSession.update("boardMapper.delete", boardNo);
 	}
+
 	
 
 	

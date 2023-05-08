@@ -90,6 +90,20 @@ public class BoardServiceImpl implements BoardService{
 		return map;
 	}
 
+	
+	
+	
+	
+	
+	/** 게시글 등록 서비스
+	 *
+	 */
+	@Override
+	public int insertBoard(Map<String, Object> paramMap) {
+
+		return dao.insertBoard(paramMap);
+	}
+
 	/** 게시글 삭제 서비스
 	 *
 	 */

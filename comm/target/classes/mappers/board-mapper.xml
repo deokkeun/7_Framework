@@ -218,6 +218,12 @@
 		
 	</select>
 	
+	<insert id="insertBoard">
+		INSERT INTO BOARD 
+		VALUES(SEQ_BOARD_NO.NEXTVAL, ${boardTitle}, ${boardContent}, DEFAULT, DEFAULT, DEFAULT, DEFAULT, #{loginMember.memberNo}, #{type})
+	</insert>
+
+	
 	
 	<update id="delete">
 		UPDATE BOARD 

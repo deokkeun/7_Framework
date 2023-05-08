@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.kh.comm.board.model.vo.BoardDetail;
 import edu.kh.comm.board.model.vo.BoardType;
+import edu.kh.comm.member.model.vo.Member;
 
 public interface BoardService {
 
@@ -43,5 +44,11 @@ public interface BoardService {
 	 * @return
 	 */
 	int delete(int boardNo);
+
+	/** 게시글 등록(insert)
+	 * @param paramMap
+	 * @return
+	 */
+	int insertBoard(Map<String, Object> paramMap);
 
 }
