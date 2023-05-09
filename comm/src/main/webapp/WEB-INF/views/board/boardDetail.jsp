@@ -190,6 +190,5 @@
     <script src="${contextPath}/resources/js/board/reply.js"></script>
 
 
-
 </body>
 </html>

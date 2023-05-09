@@ -1,6 +1,6 @@
 package edu.kh.comm.board.controller;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -16,21 +16,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.kh.comm.board.model.service.BoardService;
 import edu.kh.comm.board.model.vo.BoardDetail;
-import edu.kh.comm.board.model.vo.BoardImage;
 import edu.kh.comm.common.Util;
 import edu.kh.comm.member.model.vo.Member;
 
 @Controller
 @RequestMapping("/board")
+@SessionAttributes({"loginMember"})
 public class BoardController {
 
 	@Autowired
@@ -223,7 +226,7 @@ public class BoardController {
 	@GetMapping("/delete/{boardCode}/{boardNo}")
 	public String delete(@PathVariable("boardCode") int boardCode,
 						@PathVariable("boardNo") int boardNo,
-						RedirectAttributes ra) {
+						RedirectAttributes ra, @RequestHeader("referer") String referer) {
 		
 		int result = service.delete(boardNo);
 		
@@ -232,73 +235,97 @@ public class BoardController {
 			return "redirect:/board/list/" + boardCode;
 		} else {
 			ra.addFlashAttribute("message", "게시글 삭제중 오류발생!");
-			//board/detail/3/499
-			return "redirect:/board/detail/" + boardCode + "/" + boardNo;
+			return "redirect:referer";
 		}
 		
 	}
 	
 	
-	/** 게시글 등록
+	/** 게시글 작성(삽입/수정)
 	 * @return
 	 */
-	@PostMapping("/write")
-	public String write(@RequestParam("0") MultipartFile image0,
-						@RequestParam("1") MultipartFile image1,
-						@RequestParam("2") MultipartFile image2,
-						@RequestParam("3") MultipartFile image3,
-						@RequestParam("4") MultipartFile image4,
-						@RequestParam Map<String, Object> paramMap,
-						HttpServletRequest req,
-						RedirectAttributes ra,
-						HttpSession session) {
+	@PostMapping("/write/{boardCode}")
+	public String boardWrite(BoardDetail detail, //boardTitle, boardContent, boardNo(수정)
+							String mode,
+							@PathVariable("boardCode") int boardCode,
+							@RequestParam(value="images", required=false) List<MultipartFile> imageList, // 업로드 파일(이미지) 리스트
+							@ModelAttribute("loginMember") Member loginMember,
+							@RequestParam(value="deleteList", required=false) String deleteList, // 업로드 파일(이미지) 리스트
+							@RequestParam(value="cp", required=false, defaultValue="1") int cp,
+							HttpServletRequest req,
+							RedirectAttributes ra,
+							HttpSession session) throws IOException {
+			
 		
-		List<MultipartFile> imageList = new ArrayList<>();
-		MultipartFile[] imageFile = {image0, image1, image2, image3, image4};
-
-		for(MultipartFile image : imageFile) {
-			if(image.getSize() != 0) {
-				imageList.add(image);
-				logger.debug("이미지 확인" + image);
-			}
-		}
+		// 1) 로그인한 회원 번호 얻어와서 detail에 세팅
+		detail.setMemberNo(loginMember.getMemberNo());
 		
-		logger.debug("이미지 리스트 확인" + imageList);
+		// 2) 이미지 저장 경로 얻어오기 (webPath, folderPath)
 		
-		// 웹 접근 경로
 		String webPath = "/resources/images/board/";
-		// 서버 저장 폴더 경로
 		String folderPath = req.getSession().getServletContext().getRealPath(webPath);
+		// C:\workspace\7_Framework\comm\src\main\webapp\resources\images\board
 		
-		paramMap.put("webPath", webPath);
-		paramMap.put("folderPath", folderPath);
-		paramMap.put("imageList", imageList);
-		
-		logger.debug("mode 확인 : " + paramMap.get("mode"));
-		
-		if(paramMap.get("mode").equals("insert")) {
+		if(mode.equals("insert")) { // 삽입
 			
-			Member loginMember = (Member)session.getAttribute("loginMember");
+			// 게시글 부분 삽입(제목, 내용, 회원번호, 게시판코드)
+			// -> 삽입된 게시글 번호(boardNo) 반환 (왜? 삽입 끝나면 상세조회로 리다이렉트)
 			
-			logger.debug("type : " + paramMap.get("type"));
+			// 게시글에 포함된 이미지 정보 삽입(0~5개, 게시글 번호 필요!)
+			// -> 실제 파일로 변환해서 서버에 저장( transferTo() )
 			
-			paramMap.put("loginMember", loginMember);
-			int result = service.insertBoard(paramMap);
+			// 두번의 insert중 한번이라도 실패하면 전체 rollback (트랜잭션 처리)
 			
-			if(result == 1) {
-				logger.debug("게시글 등록 성공" + result);
+			int boardNo = service.insertBoard(detail, imageList, webPath, folderPath);
+			
+			String path = null;
+			String message = null;
+			
+			if(boardNo > 0) {
+				// /board/write/1
+				// /board/detail/1/1500
+				
+				path = "../detail/" + boardCode + "/" + boardNo;
+				message = "게시글이 등록되었습니다.";
+				
 			} else {
-				logger.debug("게시글 등록 실패" + result);				
+				path =req.getHeader("referer");
+				message = "게시글이 등록되었습니다.";
 			}
 			
-		} else {
+			ra.addFlashAttribute("message", message);
+			
+			return "redirect:" + path;
+			
+		} else { // 수정
+			
+			// 게시글 수정 서비스 호출
+			int result = service.updateBoard(detail, imageList, webPath, folderPath, deleteList);
+			
+			
+			String path = null;
+			String message = null;
+			
+			if(result > 0) {
+				// /board/write/1
+				// /board/detail/1/1500
+				
+				path = "../detail/" + boardCode + "/" + detail.getBoardNo() + "?cp=" + cp;
+				message = "게시글이 수정되었습니다.";
+				
+			} else {
+				path =req.getHeader("referer");
+				message = "게시글이 수정 실패...";
+			}
+			
+			ra.addFlashAttribute("message", message);
+			
+			return "redirect:" + path;
 			
 			
 		}
-		
-		
-		return "board/boardList";
 	}
+	
 	
 	
 	
