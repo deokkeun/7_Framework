@@ -1,6 +1,7 @@
 package edu.kh.comm.board.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,17 @@ public class ReplyServiceImpl implements ReplyService{
 		
 		return dao.selectReplyList(boardNo);
 	}
+
+	/** 댓글등록
+	 *
+	 */
+	@Override
+	public int insert(Map<String, Object> map) {
+		return dao.insert(map);
+	}
+
+
+
 	
 	
 	

@@ -2,12 +2,15 @@ package edu.kh.comm.board.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -38,14 +41,16 @@ public class ReplyController {
 	public String selectReplyList(int boardNo) {
 		List<Reply> rList = new ArrayList<Reply>();
 		
-		logger.debug("댓글리스트 컨트롤러 실행 : ");
 		rList = service.selectReplyList(boardNo);
-		logger.debug("댓글리스트 반환 실행 : " + rList);
 		
 		return new Gson().toJson(rList);
 	}
 	
 	// 댓글 등록
+	@PostMapping("/insert")
+	public int insert(@RequestParam Map<String, Object> map) {
+		return service.insert(map);
+	}
 	
 	// 댓글 수정
 	

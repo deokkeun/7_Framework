@@ -24,5 +24,19 @@
 		JOIN MEMBER_S USING(MEMBER_NO)
 		WHERE BOARD_NO = #{boardNo}
 	</select>
+	
+	<insert id="insert">
+		INSERT INTO REPLY_S (REPLY_NO, REPLY_CONTENT, REPLY_ST, CREATE_DT, MEMBER_NO, BOARD_NO, PARENT_REPLY_NO)
+		VALUES (SEQ_REPLY_NO_S.NEXTVAL, #{replyContent}, DEFAULT, DEFAULT, ${memberNo}, ${boardNo}
+		<choose>
+			<when test="parentReplyNo != 0">
+				,#{parentReplyNo}
+			</when>
+			<otherwise>
+				,NULL
+			</otherwise>
+		</choose>
+		)
+	</insert>
 
 </mapper>
