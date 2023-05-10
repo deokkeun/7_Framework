@@ -39,18 +39,21 @@ public class ReplyController {
 	// 댓글 목록 조회
 	@GetMapping("/selectReplyList")
 	public String selectReplyList(int boardNo) {
-		List<Reply> rList = new ArrayList<Reply>();
-		
-		rList = service.selectReplyList(boardNo);
-		
+		List<Reply> rList = service.selectReplyList(boardNo);
 		return new Gson().toJson(rList);
 	}
 	
 	// 댓글 등록
 	@PostMapping("/insert")
-	public int insert(@RequestParam Map<String, Object> map) {
-		return service.insert(map);
+	public int insert(Reply reply) {
+		return service.insert(reply);
 	}
+	
+//	// 댓글 등록
+//	@PostMapping("/insert")
+//	public int insert(@RequestParam Map<String, Object> map) {
+//		return service.insert(map);
+//	}
 	
 	// 댓글 수정
 	@PostMapping("/update")

@@ -15,10 +15,17 @@ public interface ReplyService {
 
 
 	/** 댓글 등록
-	 * @param replyInsert
+	 * @param reply
 	 * @return
 	 */
-	int insert(Map<String, Object> map);
+	int insert(Reply reply);
+	
+	
+//	/** 댓글 등록
+//	 * @param replyInsert
+//	 * @return
+//	 */
+//	int insert(Map<String, Object> map);
 
 
 	/** 댓글 수정
@@ -33,6 +40,9 @@ public interface ReplyService {
 	 * @return
 	 */
 	int delete(Map<String, Object> map);
+
+
+
 	
 	
 }

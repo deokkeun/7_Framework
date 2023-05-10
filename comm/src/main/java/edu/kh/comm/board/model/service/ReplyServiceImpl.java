@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import edu.kh.comm.board.model.dao.ReplyDAO;
 import edu.kh.comm.board.model.vo.Reply;
+import edu.kh.comm.common.Util;
 
 @Service
 public class ReplyServiceImpl implements ReplyService{
@@ -20,17 +21,35 @@ public class ReplyServiceImpl implements ReplyService{
 	 */
 	@Override
 	public List<Reply> selectReplyList(int boardNo) {
-		
 		return dao.selectReplyList(boardNo);
 	}
 
-	/** 댓글등록
+	
+	
+
+	/** 댓글 등록
 	 *
 	 */
 	@Override
-	public int insert(Map<String, Object> map) {
-		return dao.insert(map);
+	public int insert(Reply reply) {
+		
+		// XSS, 개행문자 처리
+		reply.setReplyContent(Util.XSSHandling(reply.getReplyContent()));
+		reply.setReplyContent(Util.newLineHandling(reply.getReplyContent()));
+		
+		return dao.insert(reply);
 	}
+
+	
+	
+//	/** 댓글등록
+//	 *
+//	 */
+//	@Override
+//	public int insert(Map<String, Object> map) {
+//		return dao.insert(map);
+//	}
+
 
 	/** 댓글 수정
 	 *
