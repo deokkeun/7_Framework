@@ -32,6 +32,23 @@ public class ReplyServiceImpl implements ReplyService{
 		return dao.insert(map);
 	}
 
+	/** 댓글 수정
+	 *
+	 */
+	@Override
+	public int update(Map<String, Object> map) {
+		return dao.update(map);
+	}
+
+	/** 댓글 삭제
+	 *
+	 */
+	@Override
+	public int delete(Map<String, Object> map) {
+		return dao.delete(map);
+	}
+
+	
 
 
 	

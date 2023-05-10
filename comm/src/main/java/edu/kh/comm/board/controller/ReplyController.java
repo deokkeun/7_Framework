@@ -53,9 +53,17 @@ public class ReplyController {
 	}
 	
 	// 댓글 수정
+	@PostMapping("/update")
+	public int update(@RequestParam Map<String, Object> map) {
+		return service.update(map);
+	}
+	
 	
 	// 댓글 삭제
-	
+	@GetMapping("/delete")
+	public int delete(@RequestParam Map<String, Object> map) {
+		return service.delete(map);
+	}
 	
 	
 }

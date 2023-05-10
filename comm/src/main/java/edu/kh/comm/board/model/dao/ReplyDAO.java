@@ -33,5 +33,20 @@ public class ReplyDAO {
 	public int insert(Map<String, Object> map) {
 		return sqlSession.insert("replyMapper.insert", map);
 	}
+
+
+	/** 댓글 수정
+	 * @param map
+	 * @return
+	 */
+	public int update(Map<String, Object> map) {
+
+		return sqlSession.update("replyMapper.update", map);
+	}
+
+
+	public int delete(Map<String, Object> map) {
+		return sqlSession.delete("replyMapper.delete", map);
+	}
 	
 }

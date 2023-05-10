@@ -19,6 +19,20 @@ public interface ReplyService {
 	 * @return
 	 */
 	int insert(Map<String, Object> map);
+
+
+	/** 댓글 수정
+	 * @param map
+	 * @return
+	 */
+	int update(Map<String, Object> map);
+
+
+	/** 댓글 삭제
+	 * @param map
+	 * @return
+	 */
+	int delete(Map<String, Object> map);
 	
 	
 }

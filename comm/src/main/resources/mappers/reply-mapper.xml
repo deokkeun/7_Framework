@@ -23,6 +23,7 @@
 		FROM REPLY_S
 		JOIN MEMBER_S USING(MEMBER_NO)
 		WHERE BOARD_NO = #{boardNo}
+		AND REPLY_ST = 'N'
 	</select>
 	
 	<insert id="insert">
@@ -38,5 +39,21 @@
 		</choose>
 		)
 	</insert>
+	
+	
+	<update id="update">
+		UPDATE REPLY_S SET REPLY_CONTENT = #{replyContent} WHERE REPLY_NO = ${replyNo}
+	</update>
+	
+	<update id="delete">
+		UPDATE REPLY_S SET REPLY_ST = 'Y' WHERE REPLY_NO = ${replyNo} OR PARENT_REPLY_NO = ${replyNo}
+	</update>
+	
+	
+	
+	
+	
+	
+	
 
 </mapper>
