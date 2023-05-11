@@ -165,6 +165,13 @@ public class BoardDAO {
 		return sqlSession.insert("boardMapper.insertBoardImage", img);
 	}
 
+	/**
+	 * @return
+	 */
+	public List<String> selectDBList() {
+		return sqlSession.selectList("boardMapper.selectDBList");
+	}
+
 	
 
 	
