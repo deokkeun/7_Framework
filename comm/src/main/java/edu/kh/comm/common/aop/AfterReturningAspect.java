@@ -18,7 +18,7 @@ public class AfterReturningAspect {
 	
 	@AfterReturning(pointcut = "CommonPointcut.implPointcut()", returning = "returnObj")
 	public void serviceReturnValue(JoinPoint jp, Object returnObj) {
-		
+
 		logger.info("Return Value : " + returnObj);
 		
 	}

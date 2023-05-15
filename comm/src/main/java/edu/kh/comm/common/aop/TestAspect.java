@@ -17,8 +17,8 @@ public class TestAspect {
 
 	private Logger logger = LoggerFactory.getLogger(TestAspect.class);
 	
-	// joinpoint : advice가 적용될 수 있는 지점(후보) 
-	// pointcut : joinpoint 중에서 실제로 advice를 적용할 지점 선택
+	// JoinPoint : Advice가 적용될 수 있는 지점(후보) 
+	// Pointcut : JoinPoint 중에서 실제로 advice를 적용할 지점 선택
 	
 	// ** Pointcut 작성방법 **
 	// @Pointcut("execution([접근제한자] 반환형 패키지+클래스명.메서드명([매개변수]))")

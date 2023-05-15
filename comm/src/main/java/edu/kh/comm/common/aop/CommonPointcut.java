@@ -12,6 +12,4 @@ public class CommonPointcut {
 		// 모든 ServiceImpl 클래스용 Pointcut
 		@Pointcut("execution(* edu.kh.comm..*Impl.*(..))")
 		public void implPointcut() {}
-	
-	
 }
